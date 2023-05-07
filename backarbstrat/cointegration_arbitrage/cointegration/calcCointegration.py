@@ -88,8 +88,10 @@ def store_cointegration_result(df_market_prices):
             last_price_2 = df_market_prices[quote_market].iloc[-1]
 
             # Check cointegration
-            coint_flag, hedge_ratio, half_life, spread = calculate_cointegration(
+            coint_flag, hedge_ratio, half_life_tuple, spread = calculate_cointegration(
                 series_1, series_2)
+            half_life = float(half_life_tuple[0]) if isinstance(half_life_tuple, tuple) else float(half_life_tuple)
+
 
             # zscore
             z_score = calculate_zscore(spread).values.tolist()
@@ -155,16 +157,17 @@ def store_cointegration_result(df_market_prices):
             new_pair.save()
         else:
             # Get the existing instance of the Cointegrated_Pairs model
-            existing_pair = Cointegrated_Pairs.objects.get(Crypto1_ID=base_market, Crypto2_ID=quote_market)
+            existing_pair = Cointegrated_Pairs.objects.get(
+                Crypto1_ID=base_market, Crypto2_ID=quote_market)
 
             # Update the fields
             existing_pair.Date_detection = timezone.now()
             existing_pair.Spread = spread_flat_list
             existing_pair.z_score = z_score
             existing_pair.hedge_ratio = hedge_ratio
-            existing_pair.half_life = half_life,
-            last_price_1=last_price_1,
-            last_price_2=last_price_2
+            existing_pair.half_life = half_life
+            existing_pair.last_price_1 = last_price_1
+            existing_pair.last_price_2 = last_price_2
 
             # Save the updated instance to the database
             existing_pair.save()
