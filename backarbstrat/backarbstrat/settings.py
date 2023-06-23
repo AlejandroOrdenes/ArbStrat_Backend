@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+from datetime import timedelta
+import os
 from pathlib import Path
 
 
@@ -42,10 +44,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
+    'alerts',
     'cointegration_arbitrage',
     'arbitrage_simulate',
-    'rest_framework',
-    'knox',
+    'rest_framework', 
+    'anymail'
 ]
 
 MIDDLEWARE = [
@@ -59,10 +62,25 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
 
+ANYMAIL = {
+    "MAILGUN_API_KEY": "8d4e54184b6d22d0c6546985b41ed6e3-07ec2ba2-974e6f53",
+    "MAILGUN_SENDER_DOMAIN": 'sandbox24feb8053278454bbd67be03b650b59e.mailgun.org',
+}
+
+EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',
-                                       'rest_framework_simplejwt.authentication.JWTAuthentication',)
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=120),
+    # Otras configuraciones...
 }
 
 
@@ -96,7 +114,8 @@ CORS_ALLOW_HEADERS = [
     "user-agent",
     "x-csrftoken",
     "x-requested-with",
-    'X-CSRFToken'
+    'X-CSRFToken',
+    'x-xsrf-token',
 ]
 
 
@@ -131,7 +150,7 @@ DATABASES = {
 
         'NAME': 'CointegrationDB',
 
-        'USER': 'admin',
+        'USER': 'postgres',
 
         'PASSWORD': '1703Jannof',
 
@@ -186,6 +205,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

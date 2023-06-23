@@ -1,3 +1,6 @@
-from django.contrib import admin
+# admin.py
 
-# Register your models here.
+from django.contrib import admin
+from cointegration_arbitrage.models import Cointegrated_Pairs
+
+admin.site.register(Cointegrated_Pairs)

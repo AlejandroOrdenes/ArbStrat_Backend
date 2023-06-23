@@ -15,6 +15,7 @@ class CointegrationArbitrageConfig(AppConfig):
             # Se llama cuando se carga la aplicación Django
             from . import scheduler_task
             scheduler_task.start_scheduler()
+            
 
 
 

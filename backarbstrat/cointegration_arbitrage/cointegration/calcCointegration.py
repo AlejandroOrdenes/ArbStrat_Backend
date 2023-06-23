@@ -7,8 +7,6 @@ from cointegration_arbitrage.models import Cointegrated_Pairs
 from cointegration_arbitrage.dydx.const import MAX_HALF_LIFE, WINDOW
 
 # Half life
-
-
 def calculate_half_life(spread):
     df_spread = pd.DataFrame(spread, columns=["spread"])
     spread_lag = df_spread.spread.shift(1)
@@ -22,8 +20,6 @@ def calculate_half_life(spread):
     return halflife
 
 # ZScore
-
-
 def calculate_zscore(spread):
     # spread_series = pd.Series(spread)
     # mean = spread_series.rolling(center=False, window=WINDOW).mean()
@@ -101,7 +97,8 @@ def store_cointegration_result(df_market_prices):
                 spreadNum = spread.values.tolist()
 
             # Log Pair
-            if coint_flag == 1 and half_life <= MAX_HALF_LIFE and half_life > 0:
+            # if coint_flag == 1 and half_life <= MAX_HALF_LIFE and half_life > 0:
+            # if coint_flag == 1:
                 criteria_met_pairs.append({
                     "base_market": base_market,
                     "quote_market": quote_market,

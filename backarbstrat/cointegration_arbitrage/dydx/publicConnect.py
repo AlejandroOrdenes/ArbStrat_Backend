@@ -106,6 +106,7 @@ def construct_market_prices(client):
         df.drop(columns=nans, inplace=True)
 
     # Return result
+    print("PRECIOS!!!")
     print(df)
     return df
 

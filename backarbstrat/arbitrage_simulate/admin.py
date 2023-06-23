@@ -1,3 +1,6 @@
-from django.contrib import admin
+# admin.py
 
-# Register your models here.
+from django.contrib import admin
+from arbitrage_simulate.models import Trade
+
+admin.site.register(Trade)

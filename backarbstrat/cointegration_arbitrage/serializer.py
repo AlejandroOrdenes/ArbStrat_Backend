@@ -8,4 +8,4 @@ class CointegratedPairsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cointegrated_Pairs
-        fields = ['Crypto1_ID', 'Crypto2_ID', 'Date_detection', 'Spread', 'z_score', 'hedge_ratio', 'half_life', 'last_price_1', 'last_price_2']
+        fields = [ 'id', 'Crypto1_ID', 'Crypto2_ID', 'Date_detection', 'Spread', 'z_score', 'hedge_ratio', 'half_life', 'last_price_1', 'last_price_2']
