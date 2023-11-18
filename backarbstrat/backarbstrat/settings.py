@@ -148,13 +148,13 @@ DATABASES = {
 
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
-        'NAME': 'arbstratdb',
+        'NAME': 'CointegrationDB',
 
-        'USER': 'Jannof',
+        'USER': 'postgres',
 
-        'PASSWORD': '16Jannof6572606',
+        'PASSWORD': '1703Jannof',
 
-        'HOST': 'arbstratdb.cjnpg2rs6mcy.us-east-2.rds.amazonaws.com',
+        'HOST': 'localhost',
 
         'PORT': '5432',
 

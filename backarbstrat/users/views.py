@@ -9,15 +9,9 @@ from django.conf import settings
 from .models import CustomUser
 from users.utils import generate_jwt_token
 from django.views.decorators.csrf import csrf_exempt
-import smtplib
-from email.mime.text import MIMEText
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.http import urlsafe_base64_encode
-from django.utils.encoding import force_bytes
-
 
 @csrf_exempt
 def login(request):
@@ -58,8 +52,11 @@ def userRegister(request):
         print("Email:", email)
 
         # Verificar si el usuario ya existe
+        if CustomUser.objects.filter(email=email).exists():
+            return JsonResponse({'message': 'Email already exist'}, status=400)
+        
         if CustomUser.objects.filter(username=username).exists():
-            return JsonResponse({'message': 'El usuario ya existe'}, status=400)
+            return JsonResponse({'message': 'Username already exists '}, status=400)
 
         # Genera un código de confirmación de 16 bytes en formato hexadecimal
         verification_token = secrets.token_urlsafe(32)
@@ -95,7 +92,7 @@ def userRegister(request):
         # Si el correo se envía con éxito, guardar el usuario
         user.save()
 
-        return JsonResponse({'message': 'Usuario creado con éxito, por favor verifica tu correo para activar la cuenta'}, status=201)
+        return JsonResponse({'message': 'Please check your email!!'}, status=201)
 
 
 @csrf_exempt
@@ -165,6 +162,9 @@ def userName_update(request):
         if CustomUser.objects.filter(username=user.username).exists():
             username = request.data.get('username')
 
+            if CustomUser.objects.filter(username=username).exists():
+                return JsonResponse({'message': 'Username exist'}, status=400)
+            
             if username:
                 user.username = username
                 user.save()

@@ -254,7 +254,7 @@ def getClosedTradesByUser(request):
             trades_data = CloseTradeSerializer(trades, many=True).data
             trades_json = json.dumps(trades_data)
 
-            return JsonResponse(trades_json, status=200, safe=False)
+            return JsonResponse(trades_data, status=200, safe=False)
         else:
             response_data = {'error': 'User not authenticated'}
             return JsonResponse(response_data, status=401)
