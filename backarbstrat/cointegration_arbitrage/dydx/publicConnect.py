@@ -14,7 +14,7 @@ def get_candles_recent(client, market):
     close_prices = []
 
     # Protect API
-    time.sleep(0.2)
+    time.sleep(1)
 
     # Get data
     candles = client.public.get_candles(
@@ -49,7 +49,7 @@ def get_candles_historical(client, market):
         to_iso = tf_obj["to_iso"]
 
         # Protect API
-        time.sleep(0.2)
+        time.sleep(1)
 
         # Get data
         candles = client.public.get_candles(
