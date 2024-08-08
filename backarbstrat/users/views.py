@@ -28,7 +28,7 @@ def login(request):
         if user is not None:
             # Generar el token JWT
             token = generate_jwt_token(user)
-            print(token)
+            
             # Retornar la respuesta con el token
             return JsonResponse({'token': token}, status=200)
         else:
@@ -37,62 +37,92 @@ def login(request):
     return JsonResponse({'message': 'Method not allowed'}, status=405)
 
 
+# @csrf_exempt
+# def userRegister(request):
+#     if request.method == 'POST':
+#         # Decodificar el cuerpo de la petición como JSON
+#         data = json.loads(request.body)
+
+#         username = data.get('username')
+#         password = data.get('password')
+#         email = data.get('email')
+
+#         # print("Username:", username)
+#         # print("Password:", password)
+#         # print("Email:", email)
+
+#         # Verificar si el usuario ya existe
+#         if CustomUser.objects.filter(email=email).exists():
+#             return JsonResponse({'message': 'Email already exist'}, status=400)
+        
+#         if CustomUser.objects.filter(username=username).exists():
+#             return JsonResponse({'message': 'Username already exists '}, status=400)
+
+#         # Genera un código de confirmación de 16 bytes en formato hexadecimal
+#         verification_token = secrets.token_urlsafe(32)
+
+#         # Construye los componentes de la URL
+#         scheme = 'http'
+#         netloc = 'localhost:3000'
+#         path = '/verify/'
+#         params = None
+#         query = urlencode({'token': verification_token})
+#         fragment = None
+
+#         # Combina los componentes para formar la URL de verificación completa
+#         verification_url = urlunparse(
+#             (scheme, netloc, path, params, query, fragment))
+
+#         print(verification_url)
+
+#         # Crear un nuevo usuario (inactivo al principio)
+#         user = CustomUser.objects.create_user(
+#             username=username, password=password, email=email, is_active=True)
+
+#         # Guardar el token de verificación en el usuario
+#         user.verification_token = verification_token
+
+#         try:
+#             # Intentar enviar el correo de verificación
+#             sendVerificationEmail(email, verification_url)
+#         except Exception as e:
+#             # Si algo va mal, retorna un error
+#             return JsonResponse({'message': 'Error al enviar el correo de verificación: ' + str(e)}, status=500)
+
+#         # Si el correo se envía con éxito, guardar el usuario
+#         user.save()
+
+#         return JsonResponse({'message': 'Please check your email!!'}, status=201)
+import json
+from django.contrib.auth import get_user_model
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from .utils import generate_jwt_token  # Asegúrate de importar la función correcta
+
+CustomUser = get_user_model()
+
 @csrf_exempt
 def userRegister(request):
     if request.method == 'POST':
-        # Decodificar el cuerpo de la petición como JSON
         data = json.loads(request.body)
 
         username = data.get('username')
         password = data.get('password')
         email = data.get('email')
 
-        print("Username:", username)
-        print("Password:", password)
-        print("Email:", email)
-
-        # Verificar si el usuario ya existe
         if CustomUser.objects.filter(email=email).exists():
             return JsonResponse({'message': 'Email already exist'}, status=400)
         
         if CustomUser.objects.filter(username=username).exists():
-            return JsonResponse({'message': 'Username already exists '}, status=400)
+            return JsonResponse({'message': 'Username already exists'}, status=400)
 
-        # Genera un código de confirmación de 16 bytes en formato hexadecimal
-        verification_token = secrets.token_urlsafe(32)
-
-        # Construye los componentes de la URL
-        scheme = 'http'
-        netloc = 'localhost:3000'
-        path = '/verify/'
-        params = None
-        query = urlencode({'token': verification_token})
-        fragment = None
-
-        # Combina los componentes para formar la URL de verificación completa
-        verification_url = urlunparse(
-            (scheme, netloc, path, params, query, fragment))
-
-        print(verification_url)
-
-        # Crear un nuevo usuario (inactivo al principio)
         user = CustomUser.objects.create_user(
-            username=username, password=password, email=email, is_active=False)
-
-        # Guardar el token de verificación en el usuario
-        user.verification_token = verification_token
-
-        try:
-            # Intentar enviar el correo de verificación
-            sendVerificationEmail(email, verification_url)
-        except Exception as e:
-            # Si algo va mal, retorna un error
-            return JsonResponse({'message': 'Error al enviar el correo de verificación: ' + str(e)}, status=500)
-
-        # Si el correo se envía con éxito, guardar el usuario
+            username=username, password=password, email=email, is_active=True)
         user.save()
 
-        return JsonResponse({'message': 'Please check your email!!'}, status=201)
+        token = generate_jwt_token(user)
+        return JsonResponse({'message': 'User registered successfully', 'token': token}, status=201)
+
 
 
 @csrf_exempt

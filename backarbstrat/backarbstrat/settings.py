@@ -30,7 +30,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 
@@ -63,10 +63,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
 
-ANYMAIL = {
-    "MAILGUN_API_KEY": "8d4e54184b6d22d0c6546985b41ed6e3-07ec2ba2-974e6f53",
-    "MAILGUN_SENDER_DOMAIN": 'sandbox24feb8053278454bbd67be03b650b59e.mailgun.org',
-}
+
 
 EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 
